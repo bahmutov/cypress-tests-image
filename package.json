@@ -1,0 +1,25 @@
+{
+  "name": "cypress-tests-image",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/cypress-tests-image.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bahmutov/cypress-tests-image/issues"
+  },
+  "homepage": "https://github.com/bahmutov/cypress-tests-image#readme",
+  "devDependencies": {
+    "cypress": "^15.8.2",
+    "prettier": "^3.7.4"
+  }
+}
