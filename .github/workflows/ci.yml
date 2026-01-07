@@ -6,12 +6,18 @@ jobs:
     runs-on: ubuntu-22.04
     container: bahmutov/cy:simple
     steps:
+      - name: Show Git version
+        run: git --version
+
+      - name: Check Node version
+        run: node --version
+
+      - name: List container files
+        run: ls -la
+
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v4
 
       - name: List files
         run: ls -la
-
-      - name: Check Node version
-        run: node --version
