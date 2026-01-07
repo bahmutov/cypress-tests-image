@@ -1,0 +1,17 @@
+name: ci
+on: push
+
+jobs:
+  tests:
+    runs-on: ubuntu-22.04
+    container: bahmutov/cy:simple
+    steps:
+      - name: Checkout 🛎️
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
+
+      - name: List files
+        run: ls -la
+
+      - name: Check Node version
+        run: node --version
