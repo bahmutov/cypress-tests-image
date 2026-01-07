@@ -41,3 +41,9 @@ jobs:
 
       - name: Print where Cypress is installed
         run: echo ${CYPRESS_CACHE_FOLDER}
+
+      - name: Print Cypress version
+        run: npx cypress --version
+
+      - name: Run Cypress tests
+        run: npx cypress run
