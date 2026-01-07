@@ -7,6 +7,7 @@ on:
 jobs:
   regular:
     runs-on: ubuntu-latest
+    container: cypress/base:24.12.0
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
