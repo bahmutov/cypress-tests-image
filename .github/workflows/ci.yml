@@ -17,6 +17,12 @@ jobs:
       - name: Check Node version
         run: node --version
 
+      - name: Print user name
+        run: whoami
+
+      - name: Print current folder
+        run: pwd
+
       - name: List container files
         run: ls -la
 
