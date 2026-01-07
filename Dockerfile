@@ -10,3 +10,7 @@ COPY package.json package-lock.json ./
 
 # install npm dependencies
 RUN npm ci
+
+# dummy entry point - we are going to use this image
+# for GitHubActions where it will run its own commands
+ENTRYPOINT [ "npx", "cypress", "run" ]
