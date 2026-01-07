@@ -1,8 +1,8 @@
 FROM cypress/browsers:node-24.12.0-chrome-143.0.7499.169-1-ff-146.0.1-edge-143.0.3650.96-1
 
 # diagnostics
-RUN node -v
-RUN npm -v
+RUN echo "node -v"
+RUN echo "npm -v"
 
 # copy ONLY the package.json and package-lock.json files
 WORKDIR /e2e
