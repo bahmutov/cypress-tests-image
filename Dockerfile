@@ -1,4 +1,6 @@
-FROM cypress/browsers:node-24.12.0-chrome-143.0.7499.169-1-ff-146.0.1-edge-143.0.3650.96-1
+# FROM cypress/browsers:node-24.12.0-chrome-143.0.7499.169-1-ff-146.0.1-edge-143.0.3650.96-1
+# https://hub.docker.com/r/cypress/base/tags
+FROM cypress/base:node24.12.0
 
 # diagnostics
 RUN echo "node -v"
