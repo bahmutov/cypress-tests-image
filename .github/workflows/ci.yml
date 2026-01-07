@@ -26,6 +26,9 @@ jobs:
       - name: List container files
         run: ls -la
 
+      - name: List files at the root
+        run: ls -la /
+
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
