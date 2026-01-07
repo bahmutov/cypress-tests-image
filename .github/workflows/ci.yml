@@ -1,10 +1,14 @@
 name: ci
-on: push
+
+# while testing, do not run automatically
+# on: push
+# only run when triggered manually
+on:
+  workflow_dispatch:
 
 jobs:
   tests:
-    # runs-on: ubuntu-latest
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     container: bahmutov/cy:simple
     steps:
       - name: Show Git version
