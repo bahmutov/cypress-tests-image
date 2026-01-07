@@ -6,11 +6,6 @@ name: ci
 on:
   workflow_dispatch:
 
-env:
-  # point to the installed node modules in the container
-  # TODO: move this into the Dockerfile
-  NODE_PATH: /e2e/node_modules
-
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -37,6 +32,9 @@ jobs:
       - name: List files installed by the image
         run: ls -la /e2e
 
+      - name: List Cypress installations
+        run: ls -la /e2e/cypress_cache
+
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
@@ -44,8 +42,8 @@ jobs:
       - name: List files
         run: ls -la
 
-      - name: print NODE_PATH
-        run: echo ${NODE_PATH}
+      - name: Symlink node modules
+        run: ln -s /e2e/node_modules ./node_modules
 
       - name: Print where Cypress is installed
         run: echo ${CYPRESS_CACHE_FOLDER}
