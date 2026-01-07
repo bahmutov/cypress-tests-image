@@ -3,7 +3,7 @@ on: push
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     container: bahmutov/cy:simple
     steps:
       - name: Show Git version
@@ -17,7 +17,7 @@ jobs:
 
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: List files
         run: ls -la
