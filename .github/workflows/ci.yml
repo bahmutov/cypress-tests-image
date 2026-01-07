@@ -6,6 +6,11 @@ name: ci
 on:
   workflow_dispatch:
 
+env:
+  # point to the installed node modules in the container
+  # TODO: move this into the Dockerfile
+  NODE_PATH: /e2e/node_modules
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -40,7 +45,7 @@ jobs:
         run: ls -la
 
       - name: print NODE_PATH
-        run: echo $NODE_PATH
+        run: echo ${NODE_PATH}
 
       - name: Print where Cypress is installed
         run: echo ${CYPRESS_CACHE_FOLDER}
