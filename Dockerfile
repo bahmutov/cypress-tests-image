@@ -11,4 +11,9 @@ WORKDIR /e2e
 COPY package.json package-lock.json ./
 
 # install npm dependencies
+# and put the Cypress binary in the local subfolder
+ENV CYPRESS_CACHE_FOLDER=/e2e/cypress_cache
 RUN npm ci
+
+# verify Cypress installation
+RUN npx cypress verify
