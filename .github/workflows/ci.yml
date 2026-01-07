@@ -29,9 +29,15 @@ jobs:
       - name: List files at the root
         run: ls -la /
 
+      - name: List files installed by the image
+        run: ls -la /e2e
+
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
 
       - name: List files
         run: ls -la
+
+      - name: Print where Cypress is installed
+        run: echo ${CYPRESS_CACHE_FOLDER}
