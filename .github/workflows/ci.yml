@@ -4,7 +4,7 @@ on: push
 jobs:
   tests:
     # runs-on: ubuntu-latest
-    runs-on: mac-latest
+    runs-on: macos-latest
     container: bahmutov/cy:simple
     steps:
       - name: Show Git version
