@@ -15,14 +15,16 @@ jobs:
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
-        # only needed to get package.json file
+        # only needed to get package.json and Dockerfile to compute the hash
         uses: actions/checkout@v6
         with:
-          sparse-checkout: 'package.json'
+          sparse-checkout: |
+            package.json
+            Dockerfile
 
-      - name: Package.json checksum
+      - name: Package.json + Dockerfile checksum
         id: hash
-        run: echo "checksum=${{ hashFiles('package.json') }}" >> $GITHUB_OUTPUT
+        run: echo "checksum=${{ hashFiles('package.json', 'Dockerfile') }}" >> $GITHUB_OUTPUT
 
       # https://github.com/tyriis/docker-image-tag-exists
       - name: Check if Docker image tag exists
@@ -99,6 +101,23 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
+
+  test-action:
+    # this job finishes after the Docker image is built (or exists already)
+    # and verifies the Cypress GitHub action works too
+    runs-on: ubuntu-latest
+    needs: [package-hash, wait-for-build]
+    container: bahmutov/cy:${{ needs.package-hash.outputs.hash }}
+    steps:
+      - name: Checkout 🛎️
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
+
+      # the important step: symlink the node modules
+      # from the Docker image into the working folder
+      # so we can skip the installation step
+      - name: Symlink node modules
+        run: ln -s /e2e/node_modules ./node_modules
 
       # confirm the Cypress action works too
       - name: Cypress action
