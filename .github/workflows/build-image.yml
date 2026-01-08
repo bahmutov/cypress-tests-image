@@ -58,8 +58,17 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: [package-hash, build-docker-image]
+    needs: package-hash
     steps:
+      - name: Wait for Docker image build
+        # https://github.com/lewagon/wait-on-check-action
+        uses: lewagon/wait-on-check-action@v1.4.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: build-docker-image
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
