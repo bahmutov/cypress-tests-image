@@ -1,0 +1,55 @@
+name: ci-old
+
+# while testing, do not run automatically
+# on: push
+# only run when triggered manually
+on:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    container: bahmutov/cy:simple
+    steps:
+      - name: Show Git version
+        run: git --version
+
+      - name: Check Node version
+        run: node --version
+
+      - name: Print user name
+        run: whoami
+
+      - name: Print current folder
+        run: pwd
+
+      - name: List container files
+        run: ls -la
+
+      - name: List files at the root
+        run: ls -la /
+
+      - name: List files installed by the image
+        run: ls -la /e2e
+
+      - name: List Cypress installations
+        run: ls -la /e2e/cypress_cache
+
+      - name: Checkout 🛎️
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
+
+      - name: List files
+        run: ls -la
+
+      - name: Symlink node modules
+        run: ln -s /e2e/node_modules ./node_modules
+
+      - name: Print where Cypress is installed
+        run: echo ${CYPRESS_CACHE_FOLDER}
+
+      - name: Print Cypress version
+        run: npx cypress --version
+
+      - name: Run Cypress tests
+        run: npx cypress run
