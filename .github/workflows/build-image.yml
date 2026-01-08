@@ -20,9 +20,19 @@ jobs:
         id: hash
         run: echo "checksum=${{ hashFiles('package.json') }}" >> $GITHUB_OUTPUT
 
+      # https://github.com/tyriis/docker-image-tag-exists
+      - uses: tyriis/docker-image-tag-exists@v2.1.0
+        with:
+          registry: docker.io
+          repository: bahmutov/cy
+          # The container image tag
+          tag: simple
+
   build-docker-image:
     runs-on: ubuntu-latest
     needs: package-hash
+    # skip job for now
+    if: ${{ false }}
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
