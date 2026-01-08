@@ -1,7 +1,7 @@
 {
   "name": "cypress-tests-image",
   "version": "1.0.0",
-  "description": "",
+  "description": "Conditional Docker image build and use",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
