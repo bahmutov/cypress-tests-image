@@ -97,7 +97,7 @@ jobs:
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
 
-      # the important step: symlink the node modules
+      # THE IMPORTANT STEP: symlink the node modules
       # from the Docker image into the working folder
       # so we can skip the installation step
       - name: Symlink node modules

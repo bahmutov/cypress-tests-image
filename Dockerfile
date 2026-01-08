@@ -17,6 +17,7 @@ COPY package.json package-lock.json ./
 
 # install npm dependencies
 # and put the Cypress binary in the local subfolder
+# https://on.cypress.io/installation
 ENV CYPRESS_CACHE_FOLDER=/e2e/cypress_cache
 RUN npm ci
 
