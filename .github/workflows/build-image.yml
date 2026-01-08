@@ -56,11 +56,11 @@ jobs:
       - name: Push Docker images
         run: docker push bahmutov/cy:${{ needs.package-hash.outputs.hash }}
 
-  test:
+  wait-for-build:
     runs-on: ubuntu-latest
     needs: package-hash
     steps:
-      - name: Wait for Docker image build
+      - name: Wait for the Docker image build / skip
         # https://github.com/lewagon/wait-on-check-action
         uses: lewagon/wait-on-check-action@v1.4.1
         with:
@@ -69,6 +69,20 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
+  test:
+    runs-on: ubuntu-latest
+    needs: [package-hash, wait-for-build]
+    container: bahmutov/cy:${{ needs.package-hash.outputs.hash }}
+    steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
+
+      - name: Symlink node modules
+        run: ln -s /e2e/node_modules ./node_modules
+
+      - name: Print Cypress version
+        run: npx cypress --version
+
+      - name: Run Cypress tests
+        run: npx cypress run
