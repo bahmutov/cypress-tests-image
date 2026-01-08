@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Package.json checksum
-        run: sha256sum -q package.json
+        run: sha256sum --quiet package.json
 
       - name: Compare to hash
         run: |
