@@ -1,15 +1,22 @@
-name: Build image
+name: Build Docker Image
 # only run when triggered manually
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
         uses: actions/checkout@v6
+
+      - name: Package.json checksum
+        run: sha256sum -q package.json
+
+      - name: Compare to hash
+        run: |
+          echo "hash from package.json is ${{ hashFiles('package.json') }}"
 
       - name: Log in to Docker Hub
         # https://github.com/docker/login-action
