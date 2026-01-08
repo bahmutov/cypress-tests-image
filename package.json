@@ -24,6 +24,7 @@
   "devDependencies": {
     "cypress": "^15.8.2",
     "cypress-map": "^1.56.0",
+    "cypress-plugin-steps": "^1.2.1",
     "prettier": "^3.7.4"
   }
 }
