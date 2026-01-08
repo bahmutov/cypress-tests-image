@@ -39,8 +39,9 @@ jobs:
       - name: Report the check results
         # print the tag result into Github Actions summary
         run: |
-          echo "## Package.json + Dockerfile hash: ${{ steps.hash.outputs.checksum }}" >> $GITHUB_STEP_SUMMARY
-          echo "## Docker image bahmutov/cy:${{ steps.hash.outputs.checksum }} tag exists: ${{ steps.tag-exists.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Docker image check" >> $GITHUB_STEP_SUMMARY
+          echo "Package.json + Dockerfile hash: ${{ steps.hash.outputs.checksum }}" >> $GITHUB_STEP_SUMMARY
+          echo "Docker image bahmutov/cy:${{ steps.hash.outputs.checksum }} ${{ steps.tag-exists.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
 
   build-docker-image:
     # builds the Docker image and pushes it to the Docker hub
