@@ -34,23 +34,23 @@ jobs:
         run: echo "checksum=${{ hashFiles('package.json', 'Dockerfile') }}" >> $GITHUB_OUTPUT
 
       # https://github.com/tyriis/docker-image-tag-exists
-      # - name: Check if Docker image tag exists
-      #   id: tag-exists
-      #   uses: tyriis/docker-image-tag-exists@v2.1.0
-      #   with:
-      #     registry: ${{ env.REGISTRY }}
-      #     repository: ${{ env.IMAGE_NAME }}
-      #     # The container image tag
-      #     tag: ${{ steps.hash.outputs.checksum }}
+      - name: Check if Docker image tag exists
+        id: tag-exists
+        uses: tyriis/docker-image-tag-exists@v2.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          repository: ${{ env.IMAGE_NAME }}
+          # The container image tag
+          tag: ${{ steps.hash.outputs.checksum }}
 
       - name: Report the check results
         # print the tag result into Github Actions summary
         run: |
           echo "## Docker image check" >> $GITHUB_STEP_SUMMARY
           echo "Registry: ${{ env.REGISTRY }}" >> $GITHUB_STEP_SUMMARY
-          echo "Image: ${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
           echo "Package.json + Dockerfile hash: ${{ steps.hash.outputs.checksum }}" >> $GITHUB_STEP_SUMMARY
-          echo "Docker image ${{ env.IMAGE_NAME }}:${{ steps.hash.outputs.checksum }} **${{ steps.tag-exists.outputs.tag }}**" >> $GITHUB_STEP_SUMMARY
+          echo "Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.hash.outputs.checksum }} **${{ steps.tag-exists.outputs.tag }}**" >> $GITHUB_STEP_SUMMARY
 
   build-docker-image:
     # builds the Docker image and pushes it to the registry
@@ -61,7 +61,7 @@ jobs:
       # don't forget to allow workflows to write to GHCR
       # https://github.com/<org>/<repo>/settings/actions
       packages: write
-    # if: ${{ needs.package-hash.outputs.tag == 'not found' }}
+    if: ${{ needs.package-hash.outputs.tag == 'not found' }}
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
