@@ -6,7 +6,10 @@ on: push
 env:
   # gcr.io / Artifacts Registry
   REGISTRY: us-east4-docker.pkg.dev
-  IMAGE_NAME: ${{ github.repository }}
+  GCP_PROJECT: helloworld-330918
+  # Artifacts Registry repository name
+  REPOSITORY: gleb-google-artifact-registry-test
+  IMAGE_NAME: cypress-tests-image
 
 jobs:
   # computes the hash of package.json and and stores it in the output
@@ -47,7 +50,7 @@ jobs:
         uses: tyriis/docker-image-tag-exists@v2.1.0
         with:
           registry: ${{ env.REGISTRY }}
-          repository: helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image
+          repository: ${{ env.GCP_PROJECT }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}
           # The container image tag
           tag: ${{ steps.hash.outputs.checksum }}
 
@@ -56,58 +59,58 @@ jobs:
         run: |
           echo "## Docker image check" >> $GITHUB_STEP_SUMMARY
           echo "Registry: ${{ env.REGISTRY }}" >> $GITHUB_STEP_SUMMARY
-          echo "Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "Image: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
           echo "Package.json + Dockerfile hash: ${{ steps.hash.outputs.checksum }}" >> $GITHUB_STEP_SUMMARY
           echo "Docker image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.hash.outputs.checksum }} **${{ steps.tag-exists.outputs.tag }}**" >> $GITHUB_STEP_SUMMARY
 
-  # build-docker-image:
-  #   # builds the Docker image and pushes it to the registry
-  #   # but only if it does not exist yet
-  #   runs-on: ubuntu-latest
-  #   needs: package-hash
-  #   permissions:
-  #     # don't forget to allow workflows to write to GHCR
-  #     # https://github.com/<org>/<repo>/settings/actions
-  #     packages: write
-  #   if: ${{ needs.package-hash.outputs.tag == 'not found' }}
-  #   steps:
-  #     - name: Checkout 🛎️
-  #       # https://github.com/actions/checkout
-  #       uses: actions/checkout@v6
+  build-docker-image:
+    # builds the Docker image and pushes it to the registry
+    # but only if it does not exist yet
+    runs-on: ubuntu-latest
+    needs: package-hash
+    permissions:
+      # don't forget to allow workflows to write to GHCR
+      # https://github.com/<org>/<repo>/settings/actions
+      packages: write
+    if: ${{ needs.package-hash.outputs.tag == 'not found' }}
+    steps:
+      - name: Checkout 🛎️
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v6
 
-  #     - name: Log in to GitHub Container Registry
-  #       # https://github.com/docker/login-action
-  #       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-  #       with:
-  #         registry: ${{ env.REGISTRY }}
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to Google Artifacts Registry
+        # https://github.com/docker/login-action
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: _json_key
+          password: ${{ secrets.GCR_KEY }}
 
-  #     # we could also use the action
-  #     # https://github.com/docker/build-push-action
+      # we could also use the action
+      # https://github.com/docker/build-push-action
 
-  #     - name: Build docker image
-  #       run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.package-hash.outputs.hash }} .
+      - name: Build docker image
+        run: docker build -t ${{ env.REGISTRY }}/${{ env.GCP_PROJECT }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ needs.package-hash.outputs.hash }} .
 
-  #     - name: Push Docker image to the correct registry
-  #       run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.package-hash.outputs.hash }}
+      - name: Push Docker image to the correct registry
+        run: docker push ${{ env.REGISTRY }}/${{ env.GCP_PROJECT }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ needs.package-hash.outputs.hash }}
 
-  # wait-for-build:
-  #   # a trick to allow other jobs to run, even if the "build" job is skipped
-  #   # runs in parallel with the "build" job and keeps checking if it is finished
-  #   # or is skipped
-  #   runs-on: ubuntu-latest
-  #   needs: package-hash
-  #   steps:
-  #     - name: Wait for the Docker image build / skip
-  #       # https://github.com/lewagon/wait-on-check-action
-  #       uses: lewagon/wait-on-check-action@v1.4.1
-  #       with:
-  #         ref: ${{ github.ref }}
-  #         check-name: build-docker-image
-  #         repo-token: ${{ secrets.GITHUB_TOKEN }}
-  #         # seconds between checks
-  #         wait-interval: 10
+  wait-for-build:
+    # a trick to allow other jobs to run, even if the "build" job is skipped
+    # runs in parallel with the "build" job and keeps checking if it is finished
+    # or is skipped
+    runs-on: ubuntu-latest
+    needs: package-hash
+    steps:
+      - name: Wait for the Docker image build / skip
+        # https://github.com/lewagon/wait-on-check-action
+        uses: lewagon/wait-on-check-action@v1.4.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: build-docker-image
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # seconds between checks
+          wait-interval: 10
 
   # test:
   #   # this job finishes after the Docker image is built (or exists already)
