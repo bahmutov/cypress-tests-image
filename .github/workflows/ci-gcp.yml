@@ -4,7 +4,8 @@ name: CI Using Google Artifacts Registry
 on: push
 
 env:
-  REGISTRY: gcr.io
+  # gcr.io / Artifacts Registry
+  REGISTRY: us-east4-docker.pkg.dev
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
@@ -46,7 +47,7 @@ jobs:
         uses: tyriis/docker-image-tag-exists@v2.1.0
         with:
           registry: ${{ env.REGISTRY }}
-          repository: 'us-east4-docker.pkg.dev/helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image'
+          repository: helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image
           # The container image tag
           tag: ${{ steps.hash.outputs.checksum }}
 
