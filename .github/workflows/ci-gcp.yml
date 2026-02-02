@@ -46,7 +46,7 @@ jobs:
         uses: tyriis/docker-image-tag-exists@v2.1.0
         with:
           registry: ${{ env.REGISTRY }}
-          repository: ${{ env.IMAGE_NAME }}
+          repository: 'us-east4-docker.pkg.dev/helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image'
           # The container image tag
           tag: ${{ steps.hash.outputs.checksum }}
 
