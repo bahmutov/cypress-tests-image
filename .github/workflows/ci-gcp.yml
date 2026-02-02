@@ -117,7 +117,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [package-hash, wait-for-build]
     # seems we cannot use the env variables here
-    container: us-east4-docker.pkg.dev/helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image:${{ needs.package-hash.outputs.hash }}
+    container:
+      image: us-east4-docker.pkg.dev/helloworld-330918/gleb-google-artifact-registry-test/cypress-tests-image:${{ needs.package-hash.outputs.hash }}
+      credentials:
+        username: _json_key
+        password: ${{ secrets.GCR_KEY }}
     steps:
       - name: Checkout 🛎️
         # https://github.com/actions/checkout
