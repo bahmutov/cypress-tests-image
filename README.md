@@ -6,3 +6,4 @@
 
 - Docker: see the [ci.yml](./.github/workflows/ci.yml) workflow file
 - GitHub Container Registry: see [ci-ghcr.yml](./.github/workflows/ci-ghcr.yml) file
+- Google Artifact Registry: see [ci-gcp.yml](./.github/workflows/ci-gcp.yml) file
